@@ -20,13 +20,13 @@ class Program
 {
     public static void Main(string[] args)
     {
-   
+
         List<ToDoApp> ToDoTask = new List<ToDoApp>();//create object of class ToDoApp
 
         int completeCount = 0;
         int ID = 0;
 
-        //reding files information and insert them to list called lines       
+        //reading files information and insert them to list called lines       
         string filepath = @"C:\\Users\\User\\Desktop\\C#\\Indvidual project\\ToDo\\text.txt";
         List<string> lines = System.IO.File.ReadAllLines(filepath).ToList();
         var f = new FileInfo(filepath);
@@ -34,27 +34,27 @@ class Program
         {
             //loop through lines list
             foreach (var line in lines)
-            {              
-                string[] values = line.Split(',');             
-                int theID = Convert.ToInt32(values[0]);  
-                string project=  values[1];  
-                DateTime theDate= DateTime.Parse(values[2]);    
-                string theTask= values[3];     
+            {
+                string[] values = line.Split(',');
+                int theID = Convert.ToInt32(values[0]);
+                string project = values[1];
+                DateTime theDate = DateTime.Parse(values[2]);
+                string theTask = values[3];
 
                 //add files information to the program list
-               ToDoTask.Add(new ToDoApp(theID, project, theDate, theTask));
+                ToDoTask.Add(new ToDoApp(theID, project, theDate, theTask));
             }
         }
         bool check = true;
-        bool isComplete = false;    
+        bool isComplete = false;
 
     SUDO_MAIN:
         while (true)
         {
-          //count the tasks in the program
+            //count the tasks in the program
             int totalTasks = ToDoTask.Count;
             int unCompleted = totalTasks - completeCount;
-            
+
             ToDoApp.header();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("You have " + completeCount + " tasks are done" + " And " + unCompleted + " tasks todo.\n");
@@ -78,83 +78,83 @@ class Program
                 choice = int.Parse(Console.ReadLine());
             }
             catch (Exception)
-            {              
-               ToDoApp.UserMsg("ERROR: Please Enter Valid Number!");             
+            {
+                ToDoApp.UserMsg("ERROR: Please Enter Valid Number!");
             }
-            
+
             switch (choice)//program will depends on choosed number
             {
-//------------------------------------Add new Task----------------------------------------------------------------------------------------------------------------------------------
+                //------------------------------------Add new Task----------------------------------------------------------------------------------------------------------------------------------
                 case 1:
                     ToDoApp.header();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Enter the Date.\t[DD-MM-YYYY]\n");
                     Console.ResetColor();
-                          
-                    string datum = Console.ReadLine();           
+
+                    string datum = Console.ReadLine();
                     //check if the inserted date by user is older than todays date
-                    int day = ToDoApp.CheckDatum(datum);//method call and date value sent to it for check
-                       
-                     if (day >= 2) // user get error message if date is less than today and get informed from which date the input should be   
-                     {
-                         DateTime dtn = DateTime.Now;
-                         string msg = "Please select date from " + dtn.ToString("d-M-yyyy") + " and upwards!";
+                    int day = ToDoApp.CheckDatum(datum);//using the method that help to check if the date is in the past
+
+                    if (day >= 2) // user will get error message if the date is older than today and get informed from which date the input should be   
+                    {
+                        DateTime dtn = DateTime.Now;
+                        string msg = "Please select date from " + dtn.ToString("d-M-yyyy") + " and upwards!";
                         ToDoApp.UserMsg("ERROR: " + msg);
-                         goto SUDO_MAIN;
-                     }
-                      
-                        if (ToDoApp.checkDate(datum)) //if date is valid the program continue   
-                        {
-                            Console.Write("\nEnter Project.\n");
-                             string proj = Console.ReadLine();
-                            Console.Write("\nEnter Task.\n");
-                             string tsk = Console.ReadLine();
+                        goto SUDO_MAIN;
+                    }
+
+                    if (ToDoApp.checkDate(datum)) //if the date is valid the program will continue   
+                    {
+                        Console.Write("\nEnter Project.\n");
+                        string proj = Console.ReadLine();
+                        Console.Write("\nEnter Task.\n");
+                        string tsk = Console.ReadLine();
 
 
-                        ID++;//the task will get id number starting from number 1
+                        ID++;//the tasks will get id number which start from number 1
 
 
-                        ToDoTask.Add(new ToDoApp(ID, proj, DateTime.Parse(datum), tsk));//add inputs into list
-                        ToDoApp.UserMsg ("New Task is created with ID number:" + ID.ToString());
+                        ToDoTask.Add(new ToDoApp(ID, proj, DateTime.Parse(datum), tsk));//add user inputs into the list
+                        ToDoApp.UserMsg("New Task is created with ID number:" + ID.ToString());
 
-                            //add the inputs into local file using streamWriter
-                            StreamWriter sw = new StreamWriter(filepath, true);                           
-                            string toFile = ID.ToString() + "," + proj +  "," + datum.ToString() + "," + tsk;                     
-                            sw.WriteLine(toFile);
-                            sw.Dispose();                        
-                        }
-                        else
-                        {
+                        //add the inputs into local file using stream writer
+                        StreamWriter sw = new StreamWriter(filepath, true);
+                        string toFile = ID.ToString() + "," + proj + "," + datum.ToString() + "," + tsk;
+                        sw.WriteLine(toFile);
+                        sw.Dispose();
+                    }
+                    else
+                    {
                         ToDoApp.UserMsg("ERROR: Invalid date!, ");
-                        }                  
+                    }
                     break;
-//----------------------------------------View all Tasks-----------------------------------------------------------------------------------------------------------------------
+                //----------------------------------------View all Tasks-----------------------------------------------------------------------------------------------------------------------
                 case 2:
                     ToDoApp.header();
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;         
-                       Console.WriteLine("\tID\tDate\t\tProject\tTask");
-                       Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("\tID\tDate\t\tProject\tTask");
+                    Console.ResetColor();
 
-                                    
-                        foreach (ToDoApp x in ToDoTask)//show the list 
-                        {
-                         check = false;
-                         Console.WriteLine("\t" + x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
-                        }            
-                                
-                        if (check)
-                        {
-                          Console.ForegroundColor = ConsoleColor.Red;
-                          Console.WriteLine("No Tasks Found!\n");
-                          Console.ResetColor();
-                        }
+
+                    foreach (ToDoApp x in ToDoTask)//show the list 
+                    {
+                        check = false;
+                        Console.WriteLine("\t" + x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
+                    }
+
+                    if (check)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("No Tasks Found!\n");
+                        Console.ResetColor();
+                    }
                     ToDoApp.footer();
-                        Console.Write("Press any key to continue:");
-                        Console.ReadKey();
-                        break;                 
-//-------------------------------------Update Task----------------------------------------------------------------------------------------------------------------------------
+                    Console.Write("Press any key to continue:");
+                    Console.ReadKey();
+                    break;
+                //-------------------------------------Update Task----------------------------------------------------------------------------------------------------------------------------
                 case 3:
-                    ToDoApp.header();    
+                    ToDoApp.header();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Enter the Task ID.");
                     Console.ResetColor();
@@ -169,44 +169,44 @@ class Program
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.Write("Enter the Date.\t[DD-MM-YYYY]\n");
                                 Console.ResetColor();
-                               
-                                    //new information for the chosen task
-                                    datum = Console.ReadLine();                               
-                                    day = ToDoApp.CheckDatum(datum);
 
-                                    if (day >= 2) 
-                                    {
-                                            DateTime dtn = DateTime.Now;
-                                            string msg = "Please select date from " + dtn.ToString("d-M-yyyy") + " and upwards!";
+                                //new information for the chosen task
+                                datum = Console.ReadLine();
+                                day = ToDoApp.CheckDatum(datum);
+
+                                if (day >= 2)
+                                {
+                                    DateTime dtn = DateTime.Now;
+                                    string msg = "Please select date from " + dtn.ToString("d-M-yyyy") + " and upwards!";
                                     ToDoApp.UserMsg("ERROR: " + msg);
-                                            goto SUDO_MAIN;
-                                    }
-                                   
-                                   if (ToDoApp.checkDate(datum)) 
-                                   {                                   
-                                       Console.Write("Enter Project.\n");
-                                       string newProj = Console.ReadLine();
-                                       Console.Write("Enter Task.\n");
-                                       string newTask = Console.ReadLine();
+                                    goto SUDO_MAIN;
+                                }
 
-                                       ToDoTask[i].date = DateTime.Parse(datum);
-                                       ToDoTask[i].Task = newTask;
-                                       ToDoTask[i].project = newProj;
+                                if (ToDoApp.checkDate(datum))
+                                {
+                                    Console.Write("Enter Project.\n");
+                                    string newProj = Console.ReadLine();
+                                    Console.Write("Enter Task.\n");
+                                    string newTask = Console.ReadLine();
 
-                                      Console.ForegroundColor = ConsoleColor.Green;
-                                      Console.WriteLine("Task Updated!\n");
-                                      Console.ResetColor();
+                                    ToDoTask[i].date = DateTime.Parse(datum);
+                                    ToDoTask[i].Task = newTask;
+                                    ToDoTask[i].project = newProj;
 
-                                     //  update the task from the file also
-                                      string[] Lines = File.ReadAllLines(filepath);
-                                      File.Delete(filepath);
-                                      using (StreamWriter sw = File.AppendText(filepath))
-                                      {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine("Task Updated!\n");
+                                    Console.ResetColor();
+
+                                    //  update the task from the file also
+                                    string[] Lines = File.ReadAllLines(filepath);
+                                    File.Delete(filepath);
+                                    using (StreamWriter sw = File.AppendText(filepath))
+                                    {
                                         foreach (string line in Lines)
                                         {
                                             string[] values = line.Split(',');
                                             int theID = Convert.ToInt32(values[0]);
-                                            if (theID != TaskID )
+                                            if (theID != TaskID)
                                             {
                                                 //Skip the line
                                                 continue;
@@ -218,12 +218,12 @@ class Program
                                                 sw.Dispose();
                                             }
                                         }
-                                      }
-                                   }
-                                   else
-                                   {
-                                       ToDoApp.UserMsg("ERROR: Invalid Date!");
-                                   }                              
+                                    }
+                                }
+                                else
+                                {
+                                    ToDoApp.UserMsg("ERROR: Invalid Date!");
+                                }
                             }
                         }
                         if (check)
@@ -231,15 +231,15 @@ class Program
                             Console.WriteLine(" No Record Found!");
                         }
                         ToDoApp.footer();
-                        Console.Write( "Press any key to continue:");
+                        Console.Write("Press any key to continue:");
                         Console.ReadKey();
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
                         ToDoApp.UserMsg("ERROR: Enter Numbers Only!!");
                     }
                     break;
-//----------------------------------------Delete Task-------------------------------------------------------------------------------------------------------------------------------
+                //----------------------------------------Delete Task-------------------------------------------------------------------------------------------------------------------------------
                 case 4:
                     ToDoApp.header();
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -247,7 +247,7 @@ class Program
                     Console.ResetColor();
                     try
                     {
-                        int TDID = int.Parse(Console.ReadLine());                                    
+                        int TDID = int.Parse(Console.ReadLine());
                         for (int i = 0; i < ToDoTask.Count; i++)
                         {
                             if (ToDoTask[i].ToDoID == TDID)//check if the inserted number equal id number of the list
@@ -265,7 +265,7 @@ class Program
                                 {
                                     string[] values = line.Split(',');
                                     int theID = Convert.ToInt32(values[0]);
-                                    if (theID != TDID +1)
+                                    if (theID != TDID + 1)
                                     {
                                         //Skip the line
                                         continue;
@@ -284,7 +284,7 @@ class Program
                             Console.ResetColor();
                         }
                         else
-                        {                     
+                        {
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Record Deleted!\n");
                             Console.ResetColor();
@@ -299,7 +299,7 @@ class Program
                         ToDoApp.UserMsg("ERROR: Enter Numbers Only! ");
                     }
                     break;
- //------------------------------------------------------Sort by date or project----------------------------------------------------------------------------------------------------------------
+                //------------------------------------------------------Sort by date or project----------------------------------------------------------------------------------------------------------------
                 case 5:
                     while (true)
                     {
@@ -320,19 +320,21 @@ class Program
                                 case 1:
                                     ToDoApp.header();
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.WriteLine("\tID\tDate\t\tProject\tTask");
-                                    Console.WriteLine("\t\t------------------------------------");
+                                    Console.WriteLine("ID\tDate\t\tProject\tTask");
+                                    Console.WriteLine("------------------------------------");
                                     Console.ResetColor();
                                     //order the list by project
                                     ToDoTask = ToDoTask.OrderBy(x => x.project).ToList();
                                     foreach (ToDoApp x in ToDoTask)
                                     {
                                         check = false;
-                                        Console.WriteLine("\t" + x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
+                                        Console.WriteLine(x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
                                     }
                                     if (check)
                                     {
+                                        Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("No tasks founded!\n");
+                                        Console.ResetColor();
                                     }
                                     ToDoApp.footer();
                                     Console.Write("Press any key to continue:");
@@ -342,19 +344,21 @@ class Program
                                 case 2:
                                     ToDoApp.header();
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.WriteLine("\tID\tDate\t\tProject\tTask");
-                                    Console.WriteLine("\t------------------------------------");
+                                    Console.WriteLine("ID\tDate\t\tProject\tTask");
+                                    Console.WriteLine("------------------------------------");
                                     Console.ResetColor();
                                     //order the list by date
                                     ToDoTask = ToDoTask.OrderBy(x => x.date).ToList();
                                     foreach (ToDoApp x in ToDoTask)
                                     {
                                         check = false;
-                                        Console.WriteLine("\t" + x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
+                                        Console.WriteLine(x.ToDoID + "\t" + x.date.ToString("dd-MM-yyyy") + "\t" + x.project + "\t" + x.Task);
                                     }
                                     if (check)
                                     {
-                                        Console.WriteLine("No Records Found!");
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("No tasks founded!\n");
+                                        Console.ResetColor();
                                     }
                                     ToDoApp.footer();
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -378,23 +382,23 @@ class Program
                             ToDoApp.UserMsg("ERROR: Insert Only Numbers!");
                         }
                     }
-//-----------------------------------------------------Mark as done-----------------------------------------------------------------------------------------------------------------
+                //-----------------------------------------------------Mark as done-----------------------------------------------------------------------------------------------------------------
                 case 6:
                     ToDoApp.header();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Enter the Task_ID.\n");
                     Console.ResetColor();
                     try
-                    {                    
+                    {
                         int TDID = int.Parse(Console.ReadLine());
                         //loop through the list 
                         for (int i = 0; i < ToDoTask.Count; i++)
                         {   //find out which task is needed 
                             if (ToDoTask[i].ToDoID == TDID)
                             {
-                                check = false;    
+                                check = false;
                                 completeCount++;//add one to the counter
-                                isComplete = true;                             
+                                isComplete = true;
                             }
                             //  remove the task from the file 
                             string[] Lines = File.ReadAllLines(filepath);
@@ -425,7 +429,7 @@ class Program
                             Console.ResetColor();
                         }
                         else
-                        {                          
+                        {
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Task marked as done!\n");
                             Console.ResetColor();
@@ -439,13 +443,13 @@ class Program
                         ToDoApp.UserMsg("ERROR: Insert Only Numbers!");
                     }
                     break;
-//-----------------------------------------------Save and exit-----------------------------------------------------------------------------------------------------------------------
+                //-----------------------------------------------Save and exit-----------------------------------------------------------------------------------------------------------------------
                 case 7:
                     ToDoApp.header();
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Observe: if you exit the program your tasked that are marked as done will be removed\n\n"); Console.ResetColor();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Are you sure you want to exit the program?\n");                   
+                    Console.WriteLine("Are you sure you want to exit the program?\n");
                     Console.WriteLine("If you want to continue type 'yes' otherwise press any key to exit\n "); Console.ResetColor();
                     try
                     {
@@ -458,7 +462,7 @@ class Program
                         {
                             goto SUDO_MAIN;//go back to menu 
                         }
-                        
+
                     }
                     catch (Exception)
                     {
